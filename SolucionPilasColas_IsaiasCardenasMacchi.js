@@ -131,6 +131,7 @@ function esArreglo(valor) {
 
 // Función para modificar la estructura (pila o cola)
 function modificar_estructura(estructura, x) {
+  console.time("Tiempo de ejecución");
   // Valida si el elemento es de tipo numerico para convertirlo a numero
   const valor = esNumero(x);
   // Verifica si la estructura es una cola
@@ -156,6 +157,7 @@ function modificar_estructura(estructura, x) {
 
   // Imprime la estructura después de la modificación
   estructura.imprimir();
+  console.timeEnd("Tiempo de ejecución");
 }
 
 // Función para mostrar el menú de opciones
