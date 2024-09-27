@@ -21,10 +21,20 @@ class Pila {
     return this.items;
   }
 
-  // Método para apilar un nuevo elemento
-  apilar(elemento) {
-    // Agrega el elemento al final del arreglo
-    this.items.push(elemento);
+  // Método para apilar un nuevo elemento o un arreglo de elementos
+  apilar(valor) {
+    if (esArreglo(valor)) {
+      // Convierte el valor en un arreglo
+      const arregloElems = JSON.parse(valor);
+
+      // Agrega los elementos al final del arreglo
+      arregloElems.forEach((item) => {
+        this.items.push(esNumero(item));
+      });
+    } else {
+      // Agrega el elemento al final del arreglo
+      this.items.push(esNumero(valor));
+    }
   }
 
   // Método para desapilar un elemento
@@ -66,10 +76,20 @@ class Cola {
     return this.items;
   }
 
-  // Método para encolar un nuevo elemento
-  encolar(elemento) {
-    // Agrega el elemento al inicio del arreglo
-    this.items.push(elemento);
+  // Método para encolar un nuevo elemento o un arreglo de elementos
+  encolar(valor) {
+    if (esArreglo(valor)) {
+      // Convierte el valor en un arreglo
+      const arregloElems = JSON.parse(valor);
+
+      // Agrega los elementos al inicio del arreglo
+      arregloElems.forEach((item) => {
+        this.items.push(esNumero(item));
+      });
+    } else {
+      // Agrega el elemento al inicio del arreglo
+      this.items.push(esNumero(valor));
+    }
   }
 
   // Método para desencolar un elemento
@@ -94,21 +114,38 @@ class Cola {
   }
 }
 
+function esNumero(elemento) {
+  // Valida si el elemento es de tipo numerico y retorna el valor nuevamente
+  return isNaN(elemento) ? elemento : Number(elemento);
+}
+
+function esArreglo(valor) {
+  // Valida si el valor es de tipo arreglo, si lo es retorna verdadero, sino retorna falso
+  try {
+    const parsed = JSON.parse(valor);
+    return Array.isArray(parsed);
+  } catch {
+    return false;
+  }
+}
+
 // Función para modificar la estructura (pila o cola)
 function modificar_estructura(estructura, x) {
+  // Valida si el elemento es de tipo numerico para convertirlo a numero
+  const valor = esNumero(x);
   // Verifica si la estructura es una cola
   const esCola = estructura instanceof Cola ? true : false;
   // Obtiene los elementos de la estructura correspondiente
   let elementos = estructura[esCola ? "obtener_cola" : "obtener_pila"]();
 
   // Verifica si el elemento x está en la estructura
-  if (!elementos.includes(x)) {
-    console.log(`\n El elemento '${x}' no se encontró en la estructura.`);
+  if (!elementos.includes(valor)) {
+    console.log(`\n El elemento '${valor}' no se encontró en la estructura.`);
     return; // Sale si no se encuentra el elemento
   }
 
   // Encuentra la posición del elemento x en la pila/cola
-  const posElem = elementos.findIndex((elem) => x === elem);
+  const posElem = elementos.findIndex((elem) => valor === elem);
   // Dependiendo de la estructura coloca la cantidad de elementos a eliminar
   const cantidadElems = esCola ? posElem : elementos.length - posElem - 1;
 
@@ -130,11 +167,11 @@ function mostrar_menu() {
   const menu = `
 Elige una opción:
 1. Crear Pila
-2. Apilar en Pila
+2. Apilar en Pila (elemento o arreglo de elementos)
 3. Desapilar de Pila
 4. Imprimir Pila
 5. Crear Cola
-6. Encolar en Cola
+6. Encolar en Cola (elemento o arreglo de elementos)
 7. Desencolar de Cola
 8. Imprimir Cola
 9. Modificar Estructura
@@ -153,7 +190,8 @@ Opción: `;
           // Opcion 2: Apilar un nuevo elemento
           rl.question("\n Ingresa el elemento a apilar: ", (elementoPila) => {
             pila.apilar(elementoPila); // Apila el elemento ingresado
-            console.log(`\n Elemento '${elementoPila}' apilado con exito!`);
+            const esPlural = esArreglo(elementoPila) ? "s" : "";
+            console.log(`\n Elemento${esPlural} '${elementoPila}' apilado${esPlural} con exito!`);
             preguntar(); // Vuelve a preguntar
           });
           return;
@@ -172,7 +210,8 @@ Opción: `;
           // Opcion 6: Encolar un nuevo elemento
           rl.question("\n Ingresa el elemento a encolar: ", (elementoCola) => {
             cola.encolar(elementoCola); // Encola el elemento ingresado
-            console.log(`\n Elemento '${elementoCola}' encolado con exito!`);
+            const esPlural = esArreglo(elementoCola) ? "s" : "";
+            console.log(`\n Elemento${esPlural} '${elementoCola}' encolado${esPlural} con exito!`);
             preguntar(); // Vuelve a preguntar
           });
           return;
