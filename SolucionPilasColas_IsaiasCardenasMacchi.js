@@ -49,14 +49,14 @@ class Cola {
   }
 
   encolar(elemento) {
-    this.items.unshift(elemento);
+    this.items.push(elemento);
   }
 
   desencolar() {
     if (this.esta_vacia()) {
       return false;
     }
-    return this.items.pop();
+    return this.items.shift();
   }
 
   esta_vacia() {
@@ -77,7 +77,8 @@ function modificar_estructura(estructura, x) {
     return;
   }
 
-  const cantidadElems = elementos.length - elementos.findIndex((elem) => x === elem) - 1;
+  const posElem = elementos.findIndex((elem) => x === elem);
+  const cantidadElems = esCola ? posElem : elementos.length - posElem - 1;
 
   for (let index = 0; index < cantidadElems; index++) {
     estructura[esCola ? "desencolar" : "desapilar"]();
